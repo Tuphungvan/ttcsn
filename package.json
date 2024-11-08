@@ -1,0 +1,29 @@
+{
+  "name": "thuctap",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tuphungvan/ttcsn.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "tu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tuphungvan/ttcsn/issues"
+  },
+  "homepage": "https://github.com/Tuphungvan/ttcsn#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
