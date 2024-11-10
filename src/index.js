@@ -4,7 +4,13 @@ const morgan = require('morgan');
 const { engine } = require('express-handlebars'); // Sử dụng cú pháp require
 const app = express();
 const port = 3000;
+//su dung file tinh
+app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(express.urlencoded({
+  extended: true
+}))
+app.use(express.json())
 // HTTP logger
 app.use(morgan('combined'));
 
@@ -17,10 +23,17 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources', 'views'));
 
 // Route
-app.get('/', (req, res) => {
+app.get('/home', (req, res) => {
   //lay home trong views
   res.render('home');
 });
+
+app.get('/', (req, res) => {
+  //lay home trong views
+  console.log(req.query);
+  res.render('index');
+});
+
 
 // Start server
 app.listen(port, () => {
