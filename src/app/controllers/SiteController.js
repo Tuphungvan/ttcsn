@@ -1,4 +1,5 @@
 class SiteController {
+    
     // get trang
     index(req, res){
         res.render('home');
