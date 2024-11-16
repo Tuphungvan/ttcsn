@@ -1,6 +1,10 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const { engine } = require('express-handlebars'); // Sử dụng cú pháp require
 const app = express();
 const port = 3000;
@@ -17,6 +21,10 @@ app.use(express.urlencoded({
   extended: true
 }))
 app.use(express.json())
+
+//vs dn dk
+app.use(cors())
+app.use(cookieParser())
 // HTTP logger
 app.use(morgan('combined'));
 
@@ -38,3 +46,6 @@ route(app);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+
+
