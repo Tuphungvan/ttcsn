@@ -4,6 +4,7 @@ const authController = require('../app/controllers/AuthControllers')
 
 // Hiển thị form đăng ký
 router.get('/register', authController.index);
+router.get('/login', authController.indexlogin);
 
 // Xử lý yêu cầu đăng ký
 router.post('/register', authController.register);

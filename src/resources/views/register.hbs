@@ -71,13 +71,48 @@
             font-size: 14px;
             color: #555;
         }
+
+        /* Style cho thông báo */
+        .error-message {
+            color: red;
+            padding: 1rem;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            color: green;
+            padding: 1rem;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <h2>REGISTER</h2>
-        <form action="/register" method="post">
+
+        <!-- Hiển thị thông báo nếu có lỗi hoặc thành công -->
+        <!-- Hiển thị thông báo nếu có lỗi hoặc thành công -->
+        {{#if errorMessage}}
+        <div class="error-message">
+            {{errorMessage}}
+        </div>
+        {{/if}}
+        
+        {{#if successMessage}}
+        <div class="success-message">
+            {{successMessage}}
+        </div>
+        {{/if}}
+
+
+        <form action="/v1/auth/register" method="post">
             <input type="text" name="username" placeholder="Enter your username" required />
             <input type="email" name="email" placeholder="Enter your email" required />
             <input type="password" name="password" placeholder="Enter your password" required />
@@ -85,7 +120,8 @@
             <input type="text" name="address" placeholder="Enter your address" required />
             <button type="submit">Register Now</button>
         </form>
-        <p>Already have an account? <a href="./login.html">Login Now</a></p>
+
+        <p>Already have an account? <a href="/v1/auth/login">Login Now</a></p>
     </div>
 </body>
 
