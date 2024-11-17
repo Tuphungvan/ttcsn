@@ -8,20 +8,10 @@
     
         <!-- login form container -->
     
-        <div class="login-form-container">
+
             <i class="fas fa-times" id="form-close"></i>
     
-            <form action="">
-                <h3>login</h3>
-                <input type="email" class="box" placeholder="enter your email" />
-                <input type="password" class="box" placeholder="enter your password" />
-                <input type="submit" value="login now" class="btn" />
-                <input type="checkbox" id="remember" />
-                <label for="remember">remember me</label>
-                <p>forget password? <a href="#">click here</a></p>
-                <p>don't have an account? <a href="#">register now</a></p>
-            </form>
-        </div>
+          
     
         <!-- home section starts -->
     
@@ -578,9 +568,6 @@
         <script>
             let searchBtn = document.querySelector('#search-btn');
             let searchBar = document.querySelector('.search-bar-container');
-            let formBtn = document.querySelector('#login-btn');
-            let loginForm = document.querySelector('.login-form-container');
-            let formClose = document.querySelector('#form-close');
             let menu = document.querySelector('#menu-bar');
             let navbar = document.querySelector('.navbar');
             let videoBtn = document.querySelectorAll('.vid-btn');
@@ -590,27 +577,16 @@
                 searchBar.classList.remove('active');
                 menu.classList.remove('fa-times');
                 navbar.classList.remove('active');
-                loginForm.classList.remove('active');
             }
-
 
             menu.addEventListener('click', () => {
                 menu.classList.toggle('fa-times');
                 navbar.classList.toggle('active');
             });
 
-
             searchBtn.addEventListener('click', () => {
                 searchBtn.classList.toggle('fa-times');
                 searchBar.classList.toggle('active');
-            });
-
-            formBtn.addEventListener('click', () => {
-                loginForm.classList.add('active');
-            });
-
-            formClose.addEventListener('click', () => {
-                loginForm.classList.remove('active');
             });
 
             videoBtn.forEach(btn => {
@@ -642,8 +618,6 @@
                 },
             });
 
-
-
             var swiper = new Swiper(".brand-slider", {
                 spaceBetween: 20,
                 loop: true,
@@ -667,6 +641,27 @@
                 },
             });
 
+            // Kiểm tra trạng thái đăng nhập
+            let loginIcon = document.querySelector('#login-btn'); // Icon login
+
+            if (loginIcon) {
+                loginIcon.addEventListener('click', () => {
+                    // Gửi yêu cầu kiểm tra trạng thái đăng nhập
+                    fetch('/v1/auth/check-login-status')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.loggedIn) {
+                                // Nếu đã đăng nhập, chuyển hướng đến trang thông tin tài khoản
+                                window.location.href = '/profile'; // Đường dẫn trang thông tin tài khoản
+                            } else {
+                                // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+                                window.location.href = '/v1/auth/login';
+                            }
+                        })
+                        .catch(err => console.error("Lỗi kiểm tra trạng thái đăng nhập:", err));
+                });
+            }
         </script>
+
     </body>
 

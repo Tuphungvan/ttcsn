@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Nunito", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f4f6;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 350px;
+            padding: 20px 30px;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .container h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .container .profile-info {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .container .profile-info p {
+            margin: 10px 0;
+        }
+
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #ffa500;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .container a {
+            color: #ffa500;
+            text-decoration: none;
+        }
+
+        .container p {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Profile</h2>
+
+        <!-- Hiển thị thông tin của người dùng -->
+        <div class="profile-info">
+            <p><strong>Username:</strong> {{user.username}}</p>
+            <p><strong>Email:</strong> {{user.email}}</p>
+            <p><strong>Phone Number:</strong> {{user.phoneNumber}}</p>
+            <p><strong>Address:</strong> {{user.address}}</p>
+        </div>
+
+        <!-- Nút để logout -->
+        <button onclick="window.location.href='/v1/auth/logout'">Logout</button>
+    </div>
+</body>
+
+</html>

@@ -3,10 +3,10 @@ const bcrypt = require("bcrypt");
 
 class AuthController {
     // Trang đăng ký
-    async index(req, res) {
+    index(req, res) {
         res.render('register'); 
     }
-        async indexlogin(req, res) {
+    indexlogin(req, res) {
         res.render('login'); 
     }
 
@@ -24,7 +24,7 @@ class AuthController {
                 { phoneNumber: req.body.phoneNumber }
             ]
         });
-
+         let errorMessage = ""; // Biến để lưu thông báo lỗi
         if (existingUser) {
             let errorMessage = "";
             if (existingUser.email === req.body.email) {
@@ -43,14 +43,31 @@ class AuthController {
                 successMessage: '' // Không hiển thị thông báo thành công
             });
         }
+    
+         // Kiểm tra độ dài của username
+        if (req.body.username.length < 6) {
+            return res.render('register', {
+                errorMessage: "Username must be at least 6 characters long.", // Thông báo lỗi nếu username quá ngắn
+                successMessage: '' // Không hiển thị thông báo thành công
+            });
+        }
+       // Kiểm tra xem có admin nào chưa
+        const adminExists = await User.findOne({ admin: true });
+        let isAdmin = false;
 
-        // Tạo và lưu người dùng mới
+        if (!adminExists) {
+            // Nếu chưa có admin, người đăng ký đầu tiên sẽ trở thành admin
+            isAdmin = true;
+        }
+
+        // Tạo và lưu người dùng mới (mặc định là user, hoặc admin nếu chưa có admin trong hệ thống)
         const newUser = new User({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
             phoneNumber: req.body.phoneNumber,
-            address: req.body.address
+            address: req.body.address,
+            admin: isAdmin // Chỉ người đầu tiên sẽ có quyền admin
         });
 
         await newUser.save();
@@ -86,13 +103,63 @@ class AuthController {
             return res.render('login', { errorMessage: "Incorrect password" }); // Trả lại trang login với thông báo lỗi
         }
 
-        // Nếu username và password đều hợp lệ, chuyển hướng đến trang home
-        res.redirect('/'); // Ví dụ: chuyển đến honme
+          // Lưu thông tin người dùng vào session
+            req.session.user = {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                 phoneNumber: user.phoneNumber, 
+                 address: user.address,
+                 admin: user.admin
+            };
+        
+        // Kiểm tra xem có phải admin không
+        if (user.admin) {
+            // Nếu là admin, chuyển hướng đến trang dashboard
+            return res.redirect('/admin/dashboard');
+        } else {
+            // Nếu không phải admin, chuyển hướng đến trang home
+            return res.redirect('/');
+        }
 
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Server error", error: err });
     }
 }
+// Route xử lý đăng xuất
+    logout(req, res) {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Logout failed" });
+            }
+            res.redirect('/v1/auth/login'); // Chuyển hướng về trang đăng nhập
+        });
+    }
+//ham kiem tra ngươi dung dang nhap chua
+   async checkLoginStatus(req, res) {
+    try {
+        if (req.session && req.session.user) {
+            res.json({
+                loggedIn: true,
+                user: {
+                    username: req.session.user.username,
+                    email: req.session.user.email,
+                    phoneNumber: req.session.user.phoneNumber,  
+                    address: req.session.user.address           
+                },
+            });
+        } else {
+            res.json({ loggedIn: false });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error", error: err });
+    }
+}
+   
+
 
 }
 
