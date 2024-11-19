@@ -1,6 +1,6 @@
 const Tour=require('../model/Tour');
 
-class searchTourController{
+class SearchTourController{
     async Search(req, res){
         try{
             const{name, level, slug}= req.query;
@@ -10,7 +10,7 @@ class searchTourController{
             if (slug) query.timestamp= slug;
 
             const SearchTour= await Tour.find(query);
-            res.render('SearchTour',{SeachTour});
+            res.render('SearchTour',{SearchTour});
         }catch(err){
             console.error(err);
             res.status(500).json({ message: "Seem to be nothing like you want", error: err });
@@ -18,4 +18,4 @@ class searchTourController{
         
     }
 }
-module.exports = new searchTourController();
+module.exports = new SearchTourController();
