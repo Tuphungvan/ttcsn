@@ -9,8 +9,8 @@ class searchTourController{
             if (level) query.level=level;
             if (slug) query.timestamp= slug;
 
-            const SeachTour= await Tour.find(query);
-            res.render('SeachTour',{SeachTour});
+            const SearchTour= await Tour.find(query);
+            res.render('SearchTour',{SeachTour});
         }catch(err){
             console.error(err);
             res.status(500).json({ message: "Seem to be nothing like you want", error: err });
