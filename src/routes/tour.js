@@ -1,11 +1,7 @@
-const mongoose= required('mongoose');
-
-const tourSchema= new mongoose.Schema({
-    name: {type:String, required: true},
-    price: {type:Number, required:true },
-    description: {type: String, requied: true},
-    valid: {type: Date, requied:true},
-    invalid: {type:Date, requied:true}
-});
-
-module.export = module('Tour', tourSchema);
+const express = require('express')
+const router = express.Router()
+const SearchTourController = require('../app/controllers/SearchTourController')
+// Route tìm kiếm tours
+router.get('/SearchTour/search', SearchTourController.search)
+router.get('/', SearchTourController.index)
+module.exports = router
