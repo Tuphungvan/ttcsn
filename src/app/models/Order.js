@@ -1,19 +1,24 @@
-const mongoose= required('mongoose');
+const mongoose = require('mongoose'); 
+const slug = require('mongoose-slug-generator');
+const mongooseDelete = require('mongoose-delete'); 
 
-const Oder= new mongoose.Schema
-(
-    {
-    name: {type:String, required: true,minlength: 6,maxlength: 50},
-    price: {type:Number, required:true },
-    description: {type: String, requied: true},
-    valid: {type: Date, requied:true},// Ngày tạo khởi tạo đơn hàng có hiệu lực
-    slug: { type: String, slug: 'name', unique: true },
-    }
-);
-mongoose.plugin(slug);  // Plugin tạo slug tự động
-Tour.plugin(mongooseDelete, {
+// Khai báo Schema cho Order
+const OrderSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    description: { type: String, required: true }, 
+    valid: { type: Date, required: true }, 
+    slug: { type: String, slug: 'name', unique: true }
+});
+
+// Cài đặt plugin slug để tự động tạo slug từ trường 'name'
+mongoose.plugin(slug);
+
+// Cài đặt plugin mongoose-delete để hỗ trợ xóa mềm
+OrderSchema.plugin(mongooseDelete, {
     deletedAt: true,  // Trường deletedAt để đánh dấu thời gian xóa
     overrideMethods: 'all',  // Cung cấp các phương thức như find, findOne với xóa mềm
 });
 
-module.exports = mongoose.model('Oder', Oder);
+// Export model
+module.exports = mongoose.model('Order', OrderSchema);
