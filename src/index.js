@@ -13,7 +13,10 @@ const port = 3000;
 const route = require('./routes');
 const db = require('./config/db');
 const User = require('./app/models/User'); // Mô hình người dùng
+const methodOverride = require('method-override');
 
+// Sử dụng method-override để xử lý các form với phương thức khác ngoài POST/GET
+app.use(methodOverride('_method'));
 
 // Connect to DB
 db.connect();
@@ -41,11 +44,27 @@ app.use(session({
 
 // Template engine
 app.engine('hbs', engine(
-  {extname: '.hbs'}
+  {extname: '.hbs',
+    helpers: {
+      eq: (a, b) => a === b,
+      add: (a, b) => a + b
+    },
+    layoutsDir: path.join(__dirname, 'resources', 'views', 'users', 'layouts'),
+    partialsDir: path.join(__dirname, 'resources', 'views', 'users', 'partials'),
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,  // Cho phép truy cập vào thuộc tính prototype
+      allowProtoMethodsByDefault: true,     // Cho phép truy cập vào phương thức prototype
+    },
+}
 ));
 app.set('view engine', 'hbs');
 //quan ly duong dan, dung tu thu muc
 app.set('views', path.join(__dirname, 'resources', 'views'));
+// Middleware để tắt layout cho tất cả các route dưới /admin
+app.use('/admin', (req, res, next) => {
+  res.locals.layout = false;  // Tắt layout cho tất cả các route dưới /admin
+  next();
+});
 
 // Route
 

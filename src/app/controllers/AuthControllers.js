@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 class AuthController {
     // Trang đăng ký
     index(req, res) {
-        res.render('register'); 
+        res.render('users/register'); 
     }
     indexlogin(req, res) {
         res.render('login'); 
@@ -38,7 +38,7 @@ class AuthController {
             }
 
             // Gửi thông báo lỗi và render lại trang
-            return res.render('register', {
+            return res.render('users/register', {
                 errorMessage: errorMessage, // Gửi thông báo lỗi
                 successMessage: '' // Không hiển thị thông báo thành công
             });
@@ -46,7 +46,7 @@ class AuthController {
     
          // Kiểm tra độ dài của username
         if (req.body.username.length < 6) {
-            return res.render('register', {
+            return res.render('users/register', {
                 errorMessage: "Username must be at least 6 characters long.", // Thông báo lỗi nếu username quá ngắn
                 successMessage: '' // Không hiển thị thông báo thành công
             });
@@ -73,7 +73,7 @@ class AuthController {
         await newUser.save();
         
         // Gửi thông báo thành công
-        res.render('register', {
+        res.render('users/register', {
             successMessage: "You have registered successfully!", // Gửi thông báo thành công
             errorMessage: '' // Không hiển thị thông báo lỗi
         });

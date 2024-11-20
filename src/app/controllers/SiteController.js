@@ -6,11 +6,11 @@ class SiteController {
     }
     // get trang
     index(req, res){
-        res.render('home');
+        res.render('users/home');
     }
     // get slug
     search(req,res){
-        res.render('search');
+        res.render('users/search');
     }
 }
 

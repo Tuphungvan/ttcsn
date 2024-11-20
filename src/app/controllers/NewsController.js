@@ -1,7 +1,7 @@
 class NewsController {
     // get trang
     index(req, res){
-        res.render('news');
+        res.render('users/news');
     }
     // get slug
     show(req,res){

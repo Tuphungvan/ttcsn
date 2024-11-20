@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Nunito", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-dashboard {
+            display:flex ;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu ul li {
+            margin: 15px 0;
+        }
+
+        .menu ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .menu ul li a:hover {
+            background: #444;
+        }
+
+        .content {
+            flex: 1;
+            background: #fff;
+            padding: 20px;
+        }
+
+        .header {
+            background: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: sticky;
+            margin-top: -20px;
+            margin-left: -20px;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .profile-icon {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-icon i {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            display: none;
+        }
+
+        #page-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .admin-dashboard {
+                flex-direction: column;
+            }
+
+            .header {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-dashboard">
+        <aside class="sidebar">
+            <div class="profile-icon" id="login-btn"><i class="fas fa-user"></i> Profile</div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="#" data-page="dashboard"><i class="fas fa-tachometer-alt icon"></i> Dashboard</a></li>
+                    <li><a href="#" data-page="manage-tours"><i class="fas fa-map-marker-alt icon"></i> Quản lý Tour</a></li>
+                    <li><a href="#" data-page="manage-bookings"><i class="fas fa-bookmark icon"></i> Quản lý Đặt chỗ</a></li>
+                    <li><a href="#" data-page="manage-users"><i class="fas fa-users icon"></i> Quản lý Người dùng</a></li>
+                    <li><a href="#" data-page="reports"><i class="fas fa-chart-line icon"></i> Báo cáo</a></li>
+                    <li><a href="#" data-page="settings"><i class="fas fa-cogs icon"></i> Cài đặt</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="content">
+            <div class="header">
+                <button class="menu-toggle">☰</button>
+                <h1 id="page-title">Dashboard</h1>
+            </div>
+            <main>
+                <section id="page-content">
+                    <p>Chào mừng đến với giao diện quản trị!</p>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const menuLinks = document.querySelectorAll(".menu a");
+            const pageTitle = document.getElementById("page-title");
+            const pageContent = document.getElementById("page-content");
+            const sidebar = document.querySelector(".sidebar");
+            const menuToggle = document.querySelector(".menu-toggle");
+
+            menuLinks.forEach(link => {
+                link.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const page = link.getAttribute("data-page");
+                    pageTitle.textContent = link.textContent;
+                    pageContent.innerHTML = `<p>Đang hiển thị nội dung của trang "${page}"</p>`;
+                });
+            });
+
+            menuToggle.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+            });
+
+            document.querySelector('#login-btn')?.addEventListener('click', () => {
+                fetch('/v1/auth/check-login-status')
+                    .then(response => response.json())
+                    .then(data => {
+                        window.location.href = data.loggedIn ? '/profile' : '/v1/auth/login';
+                    })
+                    .catch(err => console.error("Lỗi kiểm tra trạng thái đăng nhập:", err));
+            });
+        });
+    </script>
+</body>
+</html>

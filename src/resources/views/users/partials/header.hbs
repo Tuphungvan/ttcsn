@@ -1,0 +1,77 @@
+
+    <header>
+        <div id="menu-bar" class="fas fa-bars"></div>
+    
+        <a href="#" class="logo"><span>T</span>ravel</a>
+    
+        <nav class="navbar">
+            <a href="#home">home</a>
+            <a href="#book">book</a>
+            <a href="#packages">packages</a>
+            <a href="#services">services</a>
+            <a href="#gallery">gallery</a>
+            <a href="#review">review</a>
+            <a href="#contact">contact</a>
+        </nav>
+    
+        <div class="icons">
+            <i class="fas fa-search" id="search-btn"></i>
+            <i class="fas fa-user" id="login-btn"></i>
+        </div>
+    
+        <form method="GET" action="" class="search-bar-container">
+            <input type="search" name="tukhoa" id="search-bar" placeholder="search here..." />
+            <label for="search-bar" class="fas fa-search"></label>
+        </form>
+        <script>
+            // search icon
+            let searchBtn = document.querySelector('#search-btn');
+            let searchBar = document.querySelector('.search-bar-container');
+            let menu = document.querySelector('#menu-bar');
+            let navbar = document.querySelector('.navbar');
+
+                searchBtn.addEventListener('click', () => {
+                        searchBtn.classList.toggle('fa-times');
+                        searchBar.classList.toggle('active');
+                    });
+                    window.onscroll = () => {
+                                searchBtn.classList.remove('fa-times');
+                                searchBar.classList.remove('active');
+                                menu.classList.remove('fa-times');
+                                navbar.classList.remove('active');
+                            }
+                    menu.addEventListener('click', () => {
+                            menu.classList.toggle('fa-times');
+                            navbar.classList.toggle('active');
+                        });
+                        
+    // Kiểm tra trạng thái đăng nhập
+    let loginIcon = document.querySelector('#login-btn'); // Icon login
+
+    if (loginIcon) {
+        loginIcon.addEventListener('click', () => {
+            // Gửi yêu cầu kiểm tra trạng thái đăng nhập
+            fetch('/v1/auth/check-login-status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.loggedIn) {
+                        // Nếu đã đăng nhập, chuyển hướng đến trang thông tin tài khoản
+                        window.location.href = '/profile'; // Đường dẫn trang thông tin tài khoản
+                    } else {
+                        // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+                        window.location.href = '/v1/auth/login';
+                    }
+                })
+                .catch(err => console.error("Lỗi kiểm tra trạng thái đăng nhập:", err));
+        });
+    }
+            // Thêm sự kiện click vào label của thanh tìm kiếm để submit form qua query parameters
+            document.querySelector('.search-bar-container label').addEventListener('click', function () {
+                // Thực hiện submit form khi nhấn vào icon tìm kiếm
+                document.querySelector('.search-bar-container').submit();
+            });
+
+        </script>
+    </header>
+
+        
