@@ -4,7 +4,7 @@ const authRouter = require('./auth');
 const profileRouter = require('./profile');
 const adminRouter = require('./admin');
 const searchTourRouter = require('./tour');
-
+const orderManageRouter= require('./order')
 function route(app) {
     app.use('/admin', adminRouter);
     app.use('/v1/auth', authRouter);
@@ -12,6 +12,7 @@ function route(app) {
     app.use('/news', newsRouter);
     app.use('/', siteRouter);
     app.use('/tour', searchTourRouter);
+    app.use('/order',orderManageRouter);
 
 }
 
