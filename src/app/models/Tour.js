@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 const slug = require('mongoose-slug-generator');
 const mongooseDelete = require('mongoose-delete');
 
-const Schema = mongoose.Schema;
+
 
 // Khai báo schema cho Tour
-const Tour = new Schema(
+const TourSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
         description: { type: String },
         image: { type: String },
         videoId: { type: String, required: true },
         level: { type: String },
-        slug: { type: String, slug: 'name', unique: true },  // Tạo slug tự động từ trường 'name'
+        startDate: { type: Date },  // Ngày bắt đầu tour
+        endDate: { type: Date },    // Ngày kết thúc tour
+        itinerary: { type: String }, // Lịch trình tour
+        price: { type: Number },      // Giá tour
+        slug: { type: String, unique: true },  // Không sử dụng slug tự động
     },
     {
         timestamps: true,  // Tự động thêm createdAt và updatedAt
@@ -27,4 +31,5 @@ Tour.plugin(mongooseDelete, {
 });
 
 // Xuất mô hình Tour
-module.exports = mongoose.model('Tour', Tour);
+module.exports = mongoose.model('Tour', TourSchema);
+
