@@ -8,32 +8,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap"
         rel="stylesheet" />
     <style>
+        :root {
+            --primary-color: #ffa500;
+            --secondary-color: #333;
+            --background-color: #f3f4f6;
+            --text-color: #555;
+            --white-color: #fff;
+            --content-padding: 20px; /* Khoảng cách cho .content */
+            --footer-height: 80px; /* Chiều cao của footer */
+        }
+
         body {
             font-family: "Nunito", sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Đảm bảo body chiếm toàn bộ chiều cao màn hình */
+            background-color: var(--background-color);
+        }
+
+        .content {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f3f4f6;
-            margin: 0;
+            flex-grow: 1; /* Giúp content chiếm không gian còn lại giữa header và footer */
+            padding: var(--content-padding);
         }
 
         .container {
             width: 100%;
             max-width: 350px;
             padding: 20px 30px;
-            background-color: white;
+            background-color: var(--white-color);
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             text-align: center;
-            margin: 0 auto;
+            margin-top: 80px;
         }
 
         .container h2 {
             font-weight: 600;
             margin-bottom: 20px;
             font-size: 24px;
-            color: #333;
+            color: var(--secondary-color);
         }
 
         .container .profile-info {
@@ -48,9 +65,9 @@
         .container button {
             width: 100%;
             padding: 10px;
-            background-color: #ffa500;
+            background-color: var(--primary-color);
             border: none;
-            color: white;
+            color: var(--white-color);
             font-size: 16px;
             font-weight: 600;
             border-radius: 4px;
@@ -58,32 +75,38 @@
             margin-top: 10px;
         }
 
+        .container button:hover {
+            background-color: darkorange;
+        }
+
         .container a {
-            color: #ffa500;
+            color: var(--primary-color);
             text-decoration: none;
         }
 
         .container p {
             font-size: 14px;
-            color: #555;
+            color: var(--text-color);
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h2>Profile</h2>
+    <div class="content">
+        <div class="container">
+            <h2>Profile</h2>
 
-        <!-- Hiển thị thông tin của người dùng -->
-        <div class="profile-info">
-            <p><strong>Username:</strong> {{user.username}}</p>
-            <p><strong>Email:</strong> {{user.email}}</p>
-            <p><strong>Phone Number:</strong> {{user.phoneNumber}}</p>
-            <p><strong>Address:</strong> {{user.address}}</p>
+            <!-- Hiển thị thông tin của người dùng -->
+            <div class="profile-info">
+                <p><strong>Username:</strong> {{user.username}}</p>
+                <p><strong>Email:</strong> {{user.email}}</p>
+                <p><strong>Phone Number:</strong> {{user.phoneNumber}}</p>
+                <p><strong>Address:</strong> {{user.address}}</p>
+            </div>
+
+            <!-- Nút để logout -->
+            <button onclick="window.location.href='/v1/auth/logout'">Logout</button>
         </div>
-
-        <!-- Nút để logout -->
-        <button onclick="window.location.href='/v1/auth/logout'">Logout</button>
     </div>
 </body>
 

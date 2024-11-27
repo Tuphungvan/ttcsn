@@ -97,19 +97,92 @@ async deleteTour(req, res) {
     }
 }
 
-
+    // [GET] /admin/manage-users - Quản lý người dùng
     
+    async manageUsers(req, res) {
+        try {
+            const query = {};
 
-  async manageUsers(req, res) {
-    try {
-      // Hiển thị danh sách người dùng
-      const users = await User.find();
-      res.render('admin/manageUsers', { users });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Server error", error: err });
+            // Thêm điều kiện tìm kiếm nếu có query "search"
+            if (req.query.search) {
+                query.username = { $regex: req.query.search, $options: 'i' }; // Tìm kiếm không phân biệt hoa/thường
+            }
+
+            // Tạo điều kiện sắp xếp nếu có query "sort"
+            const sortOption = req.query.sort === 'asc' ? { username: 1 } : req.query.sort === 'desc' ? { username: -1 } : {};
+
+            // Lấy danh sách người dùng và sắp xếp theo sortOption
+            const users = await User.find(query).sort(sortOption);
+            
+
+            res.render('admin/manageUsers', {
+                users,
+                searchQuery: req.query.search || '',
+                sortOrder: req.query.sort || ''
+            });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: "Server error", error: err });
+        }
     }
-  }
+
+
+    // [POST] /admin/deactivate-user/:id - Khóa tài khoản người dùng
+    async deactivateUser(req, res) {
+        try {
+            const user = await User.findByIdAndUpdate(
+                req.params.id,
+                { active: false },
+                { new: true } // Trả về bản ghi sau khi cập nhật
+            );
+            if (user) {
+                res.redirect('/admin/users');
+            } else {
+                res.status(404).json({ message: "User not found" });
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: "Server error", error: err });
+        }
+    }
+
+    // [POST] /admin/activate-user/:id - Kích hoạt tài khoản người dùng
+    async activateUser(req, res) {
+        try {
+            const user = await User.findByIdAndUpdate(
+                req.params.id,
+                { active: true },
+                { new: true } // Trả về bản ghi sau khi cập nhật
+            );
+            if (user) {
+                res.redirect('/admin/users');
+            } else {
+                res.status(404).json({ message: "User not found" });
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: "Server error", error: err });
+        }
+    }
+
+
+    // [POST] /admin/reset-password/:id - Khôi phục mật khẩu
+    async resetPassword(req, res) {
+        try {
+            const user = await User.findById(req.params.id);
+            if (user) {
+                const newPassword = "defaultpassword"; // Tạo mật khẩu mặc định
+                user.password = newPassword;
+                await user.save();
+                res.redirect('/admin/users');
+            } else {
+                res.status(404).json({ message: "User not found" });
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: "Server error", error: err });
+        }
+    }
 
   // Các chức năng khác cho admin
    // Controller để tạo admin

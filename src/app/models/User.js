@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
-    maxlength: 50, // Mở rộng tối đa cho tên đầy đủ
+    maxlength: 50,
     unique: true
   },
   email: {
@@ -22,17 +22,21 @@ const userSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    required: false, // Không bắt buộc ở bước đăng ký
+    required: false,
     maxlength: 15
   },
   address: {
     type: String,
-    required: false, // Để dành cho việc đặt hàng sau này
+    required: false,
     maxlength: 200
   },
   admin: {
     type: Boolean,
     default: false
+  },
+  active: {
+    type: Boolean,
+    default: true // Mặc định tài khoản được kích hoạt
   }
 }, { timestamps: true });
 

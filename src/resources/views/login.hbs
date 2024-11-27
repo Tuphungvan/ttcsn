@@ -1,40 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
+ <style>
+        :root {
+            --primary-color: #ffa500;
+            --secondary-color: #333;
+            --background-color: #f3f4f6;
+            --error-color: #f8d7da;
+            --error-border-color: #f5c6cb;
+            --text-color: #555;
+            --white-color: #fff;
+        }
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap"
-        rel="stylesheet" />
-    <style>
         body {
             font-family: "Nunito", sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+        }
+
+        .content {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f3f4f6;
-            margin: 0;
-   
+            min-height: calc(100vh - 200px); /* Điều chỉnh để tránh tràn qua header/footer */
+            padding: 20px;
         }
 
         .container {
             width: 100%;
             max-width: 350px;
             padding: 20px 30px;
-            background-color: white;
+            background-color: var(--white-color);
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             text-align: center;
-            margin: 0 auto;
+            margin-top: 80px;
         }
 
         .container h2 {
             font-weight: 600;
             margin-bottom: 20px;
             font-size: 24px;
-            color: #333;
+            color: var(--secondary-color);
         }
 
         .container input[type="text"],
@@ -51,45 +55,63 @@
         .container button {
             width: 100%;
             padding: 10px;
-            background-color: #ffa500;
+            background-color: var(--primary-color);
             border: none;
-            color: white;
+            color: var(--white-color);
             font-size: 16px;
             font-weight: 600;
             border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .container button:hover {
+            background-color: darkorange;
         }
 
         .container a {
-            color: #ffa500;
+            color: var(--primary-color);
             text-decoration: none;
+        }
+
+        .container a:hover {
+            text-decoration: underline;
         }
 
         .container p {
             font-size: 14px;
-            color: #555;
+            color: var(--text-color);
+        }
+
+        .error-message {
+            color: red;
+            padding: 1rem;
+            background: var(--error-color);
+            border: 1px solid var(--error-border-color);
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h2>LOGIN</h2>
-        <!-- Hiển thị thông báo lỗi nếu có -->
-        {{#if errorMessage}}
-        <div class="error-message"
-            style="color: red; padding: 1rem; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px;">
-            {{errorMessage}}
+    <div class="content">
+        <div class="container">
+            <h2>LOGIN</h2>
+            <!-- Hiển thị thông báo lỗi nếu có -->
+            {{#if errorMessage}}
+            <div class="error-message">
+                {{errorMessage}}
+            </div>
+            {{/if}}
+            <form action="/v1/auth/login" method="post">
+                <input type="text" name="username" placeholder="Enter your username" required />
+                <input type="password" name="password" placeholder="Enter your password" required />
+                <button type="submit">Login Now</button>
+            </form>
+            <p>Don't have an account? <a href="/v1/auth/register">Register Now</a></p>
         </div>
-        {{/if}}
-        <form action="/v1/auth/login" method="post">
-            <input type="text" name="username" placeholder="Enter your username" required />
-            <input type="password" name="password" placeholder="Enter your password" required />
-            <button type="submit">Login Now</button>
-        </form>
-        <p>Don't have an account? <a href="/v1/auth/register">Register Now</a></p>
     </div>
 </body>
-
-</html>

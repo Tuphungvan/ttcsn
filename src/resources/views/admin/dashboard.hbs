@@ -15,8 +15,9 @@
         }
 
         .admin-dashboard {
-            display:flex ;
+            display: flex;
             height: 100vh;
+            overflow: hidden;
         }
 
         .sidebar {
@@ -27,6 +28,7 @@
             position: sticky;
             top: 0;
             height: 100vh;
+            transition: width 0.3s ease;
         }
 
         .menu ul {
@@ -56,29 +58,7 @@
             flex: 1;
             background: #fff;
             padding: 20px;
-        }
-
-        .header {
-            background: #333;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            position: sticky;
-            margin-top: -20px;
-            margin-left: -20px;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        .menu-toggle {
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
+            overflow-y: auto;
         }
 
         .profile-icon {
@@ -92,14 +72,21 @@
             margin-right: 5px;
         }
 
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 30px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+        }
+
         .sidebar.collapsed {
             width: 0;
             display: none;
-        }
-
-        #page-title {
-            text-align: center;
-            flex: 1;
         }
 
         @media (max-width: 768px) {
@@ -111,8 +98,18 @@
                 flex-direction: column;
             }
 
-            .header {
-                justify-content: center;
+            .hamburger {
+                display: block;
+            }
+
+            .sidebar.collapsed {
+                display: block;
+                width: 0;
+            }
+
+            .sidebar.open {
+                display: block;
+                width: 250px;
             }
         }
 
@@ -125,25 +122,22 @@
 </head>
 <body>
     <div class="admin-dashboard">
+        <button class="hamburger" id="hamburger-menu">☰</button>
+
         <aside class="sidebar">
             <div class="profile-icon" id="login-btn"><i class="fas fa-user"></i> Profile</div>
             <nav class="menu">
                 <ul>
-                    <li><a href="#" data-page="dashboard"><i class="fas fa-tachometer-alt icon"></i> Dashboard</a></li>
-                    <li><a href="#" data-page="manage-tours"><i class="fas fa-map-marker-alt icon"></i> Quản lý Tour</a></li>
-                    <li><a href="#" data-page="manage-bookings"><i class="fas fa-bookmark icon"></i> Quản lý Đặt chỗ</a></li>
-                    <li><a href="#" data-page="manage-users"><i class="fas fa-users icon"></i> Quản lý Người dùng</a></li>
-                    <li><a href="#" data-page="reports"><i class="fas fa-chart-line icon"></i> Báo cáo</a></li>
-                    <li><a href="#" data-page="settings"><i class="fas fa-cogs icon"></i> Cài đặt</a></li>
+                    <li><a href="/admin/manage-tours"><i class="fas fa-map-marker-alt icon"></i> Quản lý Tour</a></li>
+                    <li><a href="/admin/users"><i class="fas fa-users icon"></i> Quản lý Người dùng</a></li>
+                    <li><a href="/admin/manage-bookings"><i class="fas fa-bookmark icon"></i> Quản lý Đặt chỗ</a></li>
+                    <li><a href="/admin/reports"><i class="fas fa-chart-line icon"></i> Báo cáo</a></li>
+                    <li><a href="/admin/settings"><i class="fas fa-cogs icon"></i> Cài đặt</a></li>
                 </ul>
             </nav>
         </aside>
 
         <div class="content">
-            <div class="header">
-                <button class="menu-toggle">☰</button>
-                <h1 id="page-title">Dashboard</h1>
-            </div>
             <main>
                 <section id="page-content">
                     <p>Chào mừng đến với giao diện quản trị!</p>
@@ -155,24 +149,39 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const menuLinks = document.querySelectorAll(".menu a");
-            const pageTitle = document.getElementById("page-title");
             const pageContent = document.getElementById("page-content");
             const sidebar = document.querySelector(".sidebar");
-            const menuToggle = document.querySelector(".menu-toggle");
+            const hamburger = document.getElementById("hamburger-menu");
 
+            // Khi click vào các link trong menu, cập nhật nội dung trang
             menuLinks.forEach(link => {
                 link.addEventListener("click", (event) => {
                     event.preventDefault();
-                    const page = link.getAttribute("data-page");
-                    pageTitle.textContent = link.textContent;
-                    pageContent.innerHTML = `<p>Đang hiển thị nội dung của trang "${page}"</p>`;
+                    const url = link.getAttribute("href");
+
+                    fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Không thể tải ${url}`);
+                            }
+                            return response.text();
+                        })
+                        .then(html => {
+                            pageContent.innerHTML = html; // Thay thế nội dung hiện tại
+                        })
+                        .catch(err => {
+                            console.error("Lỗi khi tải nội dung:", err);
+                            pageContent.innerHTML = `<p>Không thể hiển thị nội dung từ "${url}".</p>`;
+                        });
                 });
             });
 
-            menuToggle.addEventListener("click", () => {
-                sidebar.classList.toggle("collapsed");
+            // Khi click vào nút hamburger, hiển thị hoặc ẩn sidebar
+            hamburger.addEventListener("click", () => {
+                sidebar.classList.toggle("open");
             });
 
+            // Kiểm tra trạng thái đăng nhập khi click vào "Profile"
             document.querySelector('#login-btn')?.addEventListener('click', () => {
                 fetch('/v1/auth/check-login-status')
                     .then(response => response.json())

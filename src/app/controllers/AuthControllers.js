@@ -97,6 +97,11 @@ class AuthController {
             return res.render('login', { errorMessage: "Username does not exist" }); // Trả lại trang login với thông báo lỗi
         }
 
+        // Kiểm tra nếu tài khoản bị khóa
+        if (!user.active) {
+            return res.render('login', { errorMessage: "Your account has been deactivated. Please contact admin." });
+        }
+        
         // So sánh mật khẩu người dùng với mật khẩu đã mã hóa trong cơ sở dữ liệu
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) {
