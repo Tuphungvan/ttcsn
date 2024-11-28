@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { engine } = require('express-handlebars'); // Sử dụng cú pháp require
 const session = require('express-session');
+const { faker } = require('@faker-js/faker');
+
 const app = express();
 const port = 3000;
 
