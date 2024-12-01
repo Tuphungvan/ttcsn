@@ -1,1 +1,311 @@
-<h1>search</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Perfect Tour</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header Section */
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar .logo {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #ff6600;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-links a:hover {
+    color: #ff6600;
+}
+
+/* Search Section */
+.search-section {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.search-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    padding: 10px;
+    font-size: 1rem;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.search-select {
+    padding: 10px;
+    font-size: 1rem;
+    width: 150px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type="number"] {
+    padding: 10px;
+    font-size: 1rem;
+    width: 150px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.btn-search {
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-search:hover {
+    background-color: #e65c00;
+}
+
+/* Available Tours Section */
+.available-tours {
+    padding: 50px 20px;
+    background-color: white;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.tour-cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    justify-items: center;
+}
+
+.tour-card {
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 350px;
+    transition: transform 0.3s ease;
+}
+
+.tour-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.tour-card-body {
+    padding: 20px;
+}
+
+.tour-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.tour-description {
+    font-size: 1.1rem;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.tour-price {
+    font-size: 1.4rem;
+    color: #ff6600;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.btn {
+    background-color: #ff6600;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #e65c00;
+}
+
+.tour-card:hover {
+    transform: translateY(-10px);
+}
+
+/* Footer Section */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <nav class="navbar">
+            <div class="logo"><span>TRAVEL</span></div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Tours</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Gallery</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Tour Search Section -->
+    <section class="search-section">
+        <h1 class="search-title">Find Your Perfect Tour</h1>
+        <form action="/tour" method="get" class="search-form" >
+        <!--Tên của trường dữ liệu này sẽ là q khi gửi lên server-->
+            <input type="text" name="q" placeholder="Enter destination or tour type" class="search-input">
+            <select class="search-select">  
+                <option value="date">Select Date</option>
+                <option value="spring">Spring</option>
+                <option value="summer">Summer</option>
+                <option value="autumn">Autumn</option>
+                <option value="winter">Winter</option>
+            </select>
+            <!-- Thay đổi phần chọn số người thành input -->
+            <input type="number" placeholder="Number of People" class="search-input" min="1">
+            <button class="btn-search">Search</button>
+        </form>
+    </section>
+
+    <!-- Available Tours Section -->
+    <section class="available-tours">
+        <h2 class="section-title">Available Tours</h2>
+        <div id="tour-container" class="tour-cards-container">
+            <!-- Default Tours -->
+            <div class="tour-card">
+                <img src="img/img1.jpg" alt="Beach Paradise">
+                <div class="tour-card-body">
+                    <h2 class="tour-title">Beach Paradise</h2>
+                    <p class="tour-description">Relax on pristine beaches, 5 days & 4 nights of pure bliss.</p>
+                    <div class="tour-price">$500</div>
+                </div>
+            </div>
+            <div class="tour-card">
+                <img src="img/img2.webp" alt="Mountain Adventure">
+                <div class="tour-card-body">
+                    <h2 class="tour-title">Mountain Adventure</h2>
+                    <p class="tour-description">7 days exploring mountains and valleys, hike the scenic trails.</p>
+                    <div class="tour-price">$750</div>
+                </div>
+            </div>
+            <div class="tour-card">
+                <img src="img/img3.jpg" alt="City Explorer">
+                <div class="tour-card-body">
+                    <h2 class="tour-title">City Explorer</h2>
+                    <p class="tour-description">Explore cultural cities, 3 days & 2 nights of discovery.</p>
+                    <div class="tour-price">$350</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>© 2024 Travel Booking</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById("search-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const query = new URLSearchParams(formData).toString();
+
+            try {
+                const response = await fetch(`/tour?${query}`);
+                const data = await response.json();
+
+                const tourContainer = document.getElementById("tour-container");
+                tourContainer.innerHTML = ""; // Clear existing tours
+
+                if (data.length > 0) {
+                    data.forEach(tour => {
+                        const tourCard = document.createElement("div");
+                        tourCard.className = "tour-card";
+                        tourCard.innerHTML = `
+                            <img src="${tour.image || 'img/default.jpg'}" alt="${tour.name}">
+                            <div class="tour-card-body">
+                                <h2 class="tour-title">${tour.name}</h2>
+                                <p class="tour-description">${tour.description || "No description available"}</p>
+                                <div class="tour-price">$${tour.price || "N/A"}</div>
+                            </div>
+                        `;
+                        tourContainer.appendChild(tourCard);
+                    });
+                } else {
+                    tourContainer.innerHTML = "<p>No tours found. Try adjusting your search criteria.</p>";
+                }
+            } catch (error) {
+                console.error("Error fetching tours:", error);
+                alert("Oops,searching error:<");
+            }
+        });
+    </script>
+</body>
+</html>
