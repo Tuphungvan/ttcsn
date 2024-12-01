@@ -13,6 +13,8 @@ const port = 3000;
 const route = require('./routes');
 const db = require('./config/db');
 const User = require('./app/models/User'); // Mô hình người dùng
+const Tour=require('./app/models/Tour');// Mô hình tour
+const Order=require('./app/models/Order');// Mô hình đơn hàng
 
 
 // Connect to DB
