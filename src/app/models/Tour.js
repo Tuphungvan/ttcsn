@@ -25,7 +25,7 @@ const TourSchema = new mongoose.Schema(
 
 // Thêm các plugin vào mongoose
 mongoose.plugin(slug);  // Plugin tạo slug tự động
-Tour.plugin(mongooseDelete, {
+TourSchema.plugin(mongooseDelete, {
     deletedAt: true,  // Trường deletedAt để đánh dấu thời gian xóa
     overrideMethods: 'all',  // Cung cấp các phương thức như find, findOne với xóa mềm
 });
