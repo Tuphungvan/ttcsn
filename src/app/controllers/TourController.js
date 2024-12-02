@@ -1,4 +1,4 @@
-const Tour=require('../model/Tour');
+const Tour=require('../models/Tour');
 
 class SearchTourController{
     async Search(req, res){
