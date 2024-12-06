@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Your Perfect Tour</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        /* General Styles */
+    <link rel="stylesheet" href="/public/css/findtour.css">
+    <style>/* General Styles */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -195,8 +195,7 @@ footer {
     padding: 20px 0;
     margin-top: 40px;
 }
-
-    </style>
+</style>
 </head>
 <body>
     <!-- Header Section -->
@@ -216,19 +215,24 @@ footer {
     <!-- Tour Search Section -->
     <section class="search-section">
         <h1 class="search-title">Find Your Perfect Tour</h1>
-        <form action="/tour" method="get" class="search-form" >
-        <!--Tên của trường dữ liệu này sẽ là q khi gửi lên server-->
+        <form id="search-form" class="search-form" action="/tours/search" method="get">
+            <!-- Input cho từ khóa -->
             <input type="text" name="q" placeholder="Enter destination or tour type" class="search-input">
-            <select class="search-select">  
-                <option value="date">Select Date</option>
+            
+            <!-- Select mùa -->
+            <select name="season" class="search-select">  
+                <option value="">Select Season</option>
                 <option value="spring">Spring</option>
                 <option value="summer">Summer</option>
                 <option value="autumn">Autumn</option>
                 <option value="winter">Winter</option>
             </select>
-            <!-- Thay đổi phần chọn số người thành input -->
-            <input type="number" placeholder="Number of People" class="search-input" min="1">
-            <button class="btn-search">Search</button>
+            
+            <!-- Input số người -->
+            <input type="number" name="people" placeholder="Number of People" class="search-input" min="1">
+            
+            <!-- Nút tìm kiếm -->
+            <button type="submit" class="btn-search">Search</button>
         </form>
     </section>
 
@@ -236,13 +240,43 @@ footer {
     <section class="available-tours">
         <h2 class="section-title">Available Tours</h2>
         <div id="tour-container" class="tour-cards-container">
+            {{#each tours}}
+            <div class="tour-card">
+                <img src="{{this.img}}" alt="{{this.name}}">
+                <div class="tour-card-body">
+                    <h2 class="tour-title">{{this.name}}</h2>
+                    <p class="tour-description">{{this.description}}</p>
+                    <div class="tour-price">${{this.price}}</div>
+                    <button class="btn add-to-cart" 
+                            data-id="{{this.id}}" 
+                            data-name="{{this.name}}" 
+                            data-price="{{this.price}}" 
+                            data-img="{{this.img}}">
+                            Add to Cart
+                    </button>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </section>
+    
+    <section class="available-tours">
+        <h2 class="section-title">Recommended Tour</h2>
+        <div id="tour-container" class="tour-cards-container">
             <!-- Default Tours -->
             <div class="tour-card">
-                <img src="img/img1.jpg" alt="Beach Paradise">
+                <img src="img/p-2.jpg" alt="Beach Paradise">
                 <div class="tour-card-body">
                     <h2 class="tour-title">Beach Paradise</h2>
                     <p class="tour-description">Relax on pristine beaches, 5 days & 4 nights of pure bliss.</p>
                     <div class="tour-price">$500</div>
+                    <button class="btn add-to-cart" 
+                            data-id="1" 
+                            data-name="Beach Paradise" 
+                            data-price="500" 
+                            data-img="img/p-2.jpg">
+                            Add to Cart
+                    </button>
                 </div>
             </div>
             <div class="tour-card">
@@ -251,61 +285,40 @@ footer {
                     <h2 class="tour-title">Mountain Adventure</h2>
                     <p class="tour-description">7 days exploring mountains and valleys, hike the scenic trails.</p>
                     <div class="tour-price">$750</div>
+                    <button class="btn add-to-cart" 
+                            data-id="2" 
+                            data-name="Mountain Adventure" 
+                            data-price="750" 
+                            data-img="img/p4.jpg">
+                            Add to Cart
+                    </button>
                 </div>
             </div>
             <div class="tour-card">
-                <img src="img/img3.jpg" alt="City Explorer">
+                <img src="img/p-3.jpg" alt="City Explorer">
                 <div class="tour-card-body">
                     <h2 class="tour-title">City Explorer</h2>
                     <p class="tour-description">Explore cultural cities, 3 days & 2 nights of discovery.</p>
                     <div class="tour-price">$350</div>
+                    <button class="btn add-to-cart" 
+                            data-id="3" 
+                            data-name="City Explorer" 
+                            data-price="350" 
+                            data-img="img/p-3.jpg">
+                            Add to Cart
+                    </button>
                 </div>
             </div>
         </div>
     </section>
-
     <!-- Footer Section -->
     <footer>
         <p>© 2024 Travel Booking</p>
     </footer>
 
     <!-- JavaScript -->
-    <script>
-        document.getElementById("search-form").addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(e.target);
-            const query = new URLSearchParams(formData).toString();
-
-            try {
-                const response = await fetch(`/tour?${query}`);
-                const data = await response.json();
-
-                const tourContainer = document.getElementById("tour-container");
-                tourContainer.innerHTML = ""; // Clear existing tours
-
-                if (data.length > 0) {
-                    data.forEach(tour => {
-                        const tourCard = document.createElement("div");
-                        tourCard.className = "tour-card";
-                        tourCard.innerHTML = `
-                            <img src="${tour.image || 'img/default.jpg'}" alt="${tour.name}">
-                            <div class="tour-card-body">
-                                <h2 class="tour-title">${tour.name}</h2>
-                                <p class="tour-description">${tour.description || "No description available"}</p>
-                                <div class="tour-price">$${tour.price || "N/A"}</div>
-                            </div>
-                        `;
-                        tourContainer.appendChild(tourCard);
-                    });
-                } else {
-                    tourContainer.innerHTML = "<p>No tours found. Try adjusting your search criteria.</p>";
-                }
-            } catch (error) {
-                console.error("Error fetching tours:", error);
-                alert("Oops,searching error:<");
-            }
-        });
-    </script>
+    
+    
 </body>
 </html>
+
