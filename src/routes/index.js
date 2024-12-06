@@ -3,7 +3,7 @@ const siteRouter = require('./site');
 const authRouter = require('./auth');
 const profileRouter = require('./profile');
 const adminRouter = require('./admin');
-const TourRouter = require('./tour');
+const TourRouter = require('./tours');
 const orderManageRouter= require('./order')
 function route(app) {
     app.use('/admin', adminRouter);
