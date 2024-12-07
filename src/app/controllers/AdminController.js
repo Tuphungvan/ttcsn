@@ -2,6 +2,19 @@
 const Tour = require('../models/Tour'); 
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+
+// Hàm trích xuất videoId từ URL YouTube
+function extractVideoId(videoUrl) {
+    if (typeof videoUrl === 'string' && videoUrl) {
+        // Kiểm tra nếu URL là YouTube
+        const regex = /(?:youtube\.com\/(?:[^\/]+\/[^\?]+|\S+\/\S+\/\S+))?([a-zA-Z0-9_-]{11})/;
+        const match = videoUrl.match(regex);
+        return match ? match[1] : null;
+    }
+    return null; // Trả về null nếu không tìm thấy ID
+}
+
+
 class AdminController {
   async dashboard(req, res) {
     try {
@@ -30,27 +43,37 @@ async renderCreateTour(req, res) {
 }
 
 // [POST] /admin/create-tour - Lưu tour mới
-async createTour(req, res) {
-    try {
-        const { name, description, videoId, level, startDate, endDate, itinerary, price } = req.body;
-        const newTour = new Tour({
-            name,
-            description,
-            videoId,
-            level,
-            startDate,
-            endDate,
-            itinerary,
-            price,
-            image: `https://img.youtube.com/vi/${videoId}/sddefault.jpg`
-        });
-        await newTour.save();
-        res.redirect('/admin/manage-tours');
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error', error: err });
+    async createTour(req, res) {
+        try {
+            const { name, description, videoUrl, level, startDate, endDate, itinerary, price } = req.body;
+
+            // Trích xuất videoId từ URL YouTube
+            const videoId = extractVideoId(videoUrl);
+            if (!videoId) {
+                return res.status(400).json({ message: 'Invalid YouTube URL' });
+            }
+
+            // Tạo URL thumbnail từ videoId
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+
+            const newTour = new Tour({
+                name,
+                description,
+                videoId,
+                level,
+                startDate,
+                endDate,
+                itinerary,
+                price,
+                image: thumbnailUrl // Lưu thumbnail vào image
+            });
+            await newTour.save();
+            res.redirect('/admin/manage-tours');
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Server error', error: err });
+        }
     }
-}
 
 // [GET] /admin/edit-tour/:id - Chỉnh sửa tour
 async renderEditTour(req, res) {
@@ -64,26 +87,36 @@ async renderEditTour(req, res) {
 }
 
 // [POST] /admin/edit-tour/:id - Lưu chỉnh sửa
-async updateTour(req, res) {
-    try {
-        const { name, description, videoId, level, startDate, endDate, itinerary, price } = req.body;
-        const updatedTour = await Tour.findByIdAndUpdate(req.params.id, {
-            name,
-            description,
-            videoId,
-            level,
-            startDate,
-            endDate,
-            itinerary,
-            price,
-            image: `https://img.youtube.com/vi/${videoId}/sddefault.jpg`
-        }, { new: true });
-        res.redirect('/admin/manage-tours');
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error', error: err });
+    async updateTour(req, res) {
+        try {
+            const { name, description, videoUrl, level, startDate, endDate, itinerary, price } = req.body;
+
+            // Trích xuất videoId từ URL YouTube
+            const videoId = extractVideoId(videoUrl);
+            if (!videoId) {
+                return res.status(400).json({ message: 'Invalid YouTube URL' });
+            }
+
+            // Tạo URL thumbnail từ videoId
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+
+            const updatedTour = await Tour.findByIdAndUpdate(req.params.id, {
+                name,
+                description,
+                videoId,
+                level,
+                startDate,
+                endDate,
+                itinerary,
+                price,
+                image: thumbnailUrl // Cập nhật thumbnail mới
+            }, { new: true });
+            res.redirect('/admin/manage-tours');
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Server error', error: err });
+        }
     }
-}
 
 // [DELETE] /admin/delete-tour/:id - Xóa tour
 async deleteTour(req, res) {
