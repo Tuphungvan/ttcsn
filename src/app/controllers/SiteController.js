@@ -49,6 +49,33 @@ class SiteController {
             res.status(500).json({ message: "Đã xảy ra lỗi trong quá trình tìm kiếm", error: err.message });
         }
     }
+
+    async detail(req, res) {
+        try {
+            const { slug } = req.params;
+
+            // Tìm tour theo slug
+            const tour = await Tour.findOne({ slug });
+
+            // Kiểm tra nếu không tìm thấy
+            if (!tour) {
+                return res.status(404).render('errors/404', { message: 'Tour not found' });
+            }
+
+            // Trích xuất videoId từ URL (tour.videoId)
+            if (tour.videoId) {
+                const urlObj = new URL(tour.videoId); // Tạo đối tượng URL
+                tour.videoId = urlObj.searchParams.get('v'); // Lấy giá trị tham số 'v'
+            }
+
+            // Render trang detail với dữ liệu của tour
+            res.render('users/tourdetail', { tour });
+        } catch (err) {
+            console.error('Error:', err);
+            res.status(500).json({ message: "Đã xảy ra lỗi trong quá trình lấy dữ liệu tour", error: err.message });
+        }
+    }
+
 }
 
 module.exports = new SiteController();

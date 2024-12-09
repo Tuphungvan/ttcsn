@@ -49,7 +49,18 @@ app.engine('hbs', engine(
   {extname: '.hbs',
     helpers: {
       eq: (a, b) => a === b,
-      add: (a, b) => a + b
+      add: (a, b) => a + b,
+      split: (text, delimiter) => text ? text.split(delimiter) : [],
+      formatDate: (date) => new Date(date).toLocaleDateString('vi-VN'),
+      extractVideoId: (url) => {
+        try {
+          const videoId = new URL(url).searchParams.get('v');
+          return videoId || '';
+        } catch (err) {
+          console.error('Invalid video URL:', url, err);
+          return '';
+        }
+      }
     },
     layoutsDir: path.join(__dirname, 'resources', 'views', 'users', 'layouts'),
     partialsDir: path.join(__dirname, 'resources', 'views', 'users', 'partials'),
