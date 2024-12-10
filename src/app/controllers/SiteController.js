@@ -62,12 +62,6 @@ class SiteController {
                 return res.status(404).render('errors/404', { message: 'Tour not found' });
             }
 
-            // Trích xuất videoId từ URL (tour.videoId)
-            if (tour.videoId) {
-                const urlObj = new URL(tour.videoId); // Tạo đối tượng URL
-                tour.videoId = urlObj.searchParams.get('v'); // Lấy giá trị tham số 'v'
-            }
-
             // Render trang detail với dữ liệu của tour
             res.render('users/tourdetail', { tour });
         } catch (err) {
