@@ -93,18 +93,18 @@
     gap: 2rem;
   }
 
-  .packages .box-container .box {
+.packages .box-container .box {
     flex: 1 1 30rem;
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .packages .box-container .box img {
-    height: 25rem;
+.packages .box-container .box img {
+    height: 12.5rem; /* Giảm chiều cao ảnh xuống một nửa */
     width: 100%;
     object-fit: cover;
-  }
+}
 
   .packages .box-container .box .content {
     padding: 2rem;
@@ -297,137 +297,36 @@
         <!-- packages section starts -->
     
         <section class="packages" id="packages">
-            <h1 class="heading">
-                <span>p</span>
-                <span>a</span>
-                <span>c</span>
-                <span>k</span>
-                <span>a</span>
-                <span>g</span>
-                <span>e</span>
-                <span>s</span>
-            </h1>
-    
-            <div class="box-container">
-                <div class="box">
-                    <img src="../img/p-1.jpg" alt="" />
-                    <div class="content">
-                        <h3><i class="fas fa-map-marker-alt"></i> mumbai</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Veritatis, nam!
-                        </p>
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <div class="price">$90.00 <span>$120.00</span></div>
-                        <a href="#" class="btn">book now</a>
+        <h1 class="heading">
+            <span>p</span>
+            <span>a</span>
+            <span>c</span>
+            <span>k</span>
+            <span>a</span>
+            <span>g</span>
+            <span>e</span>
+            <span>s</span>
+        </h1>
+
+        <div class="box-container">
+            {{#each tours}}
+            <div class="box">
+                <img src="{{this.image}}" alt="{{this.name}}" />
+                <div class="content">
+                    <h3><i class="fas fa-map-marker-alt"></i> {{this.name}}</h3>
+                    <div class="stars">
+                        {{#each this.stars}}
+                        <i class="fas fa-star"></i>
+                        {{/each}}
+                        {{#if (lt this.stars.length 5)}}
+                        <i class="far fa-star"></i>
+                        {{/if}}
+                    </div>
+                        <div class="price">{{this.price}} <span>{{this.originalPrice}}</span></div>
+                        <a href="/tour/{{this.slug}}" class="btn">Book Now</a>
                     </div>
                 </div>
-    
-                <div class="box">
-                    <img src="../img/p-2.jpg" alt="" />
-                    <div class="content">
-                        <h3><i class="fas fa-map-marker-alt"></i> hawaii</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Veritatis, nam!
-                        </p>
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <div class="price">$90.00 <span>$120.00</span></div>
-                        <a href="#" class="btn">book now</a>
-                    </div>
-                </div>
-    
-                <div class="box">
-                    <img src="../img/p-3.jpg" alt="" />
-                    <div class="content">
-                        <h3><i class="fas fa-map-marker-alt"></i> sydney</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Veritatis, nam!
-                        </p>
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <div class="price">$90.00 <span>$120.00</span></div>
-                        <a href="#" class="btn">book now</a>
-                    </div>
-                </div>
-    
-                <div class="box">
-                    <img src="../img/p-4.jpg" alt="" />
-                    <div class="content">
-                        <h3><i class="fas fa-map-marker-alt"></i> paris</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Veritatis, nam!
-                        </p>
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <div class="price">$90.00 <span>$120.00</span></div>
-                        <a href="#" class="btn">book now</a>
-                    </div>
-                </div>
-    
-                <div class="box">
-                    <img src="../img/p-5.jpg" alt="" />
-                    <div class="content">
-                        <h3><i class="fas fa-map-marker-alt"></i> tokyo</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Veritatis, nam!
-                        </p>
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <div class="price">$90.00 <span>$120.00</span></div>
-                        <a href="#" class="btn">book now</a>
-                    </div>
-                </div>
-    
-                <div class="box">
-                    <img src="../img/p-6.jpg" alt="" />
-                    <div class="content">
-                        <h3><i class="fas fa-map-marker-alt"></i> eypt</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Veritatis, nam!
-                        </p>
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <div class="price">$90.00 <span>$120.00</span></div>
-                        <a href="#" class="btn">book now</a>
-                    </div>
-                </div>
+                {{/each}}
             </div>
         </section>
     

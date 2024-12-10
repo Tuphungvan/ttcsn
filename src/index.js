@@ -22,21 +22,21 @@ app.use(methodOverride('_method'));
 
 // Connect to DB
 db.connect();
-//su dung file tinh
+// Sử dụng file tính
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(express.urlencoded({
   extended: true
-}))
+}));
 app.use(express.json())
 
-//vs dn dk
+// Với dn dk
 app.use(cors())
 app.use(cookieParser())
 // HTTP logger
 app.use(morgan('combined'));
 
-//session
+// session
 app.use(session({
     secret: 'your-secret-key', 
     resave: false, 
@@ -45,25 +45,32 @@ app.use(session({
 }));
 
 // Template engine
-app.engine('hbs', engine(
-  {extname: '.hbs',
-    helpers: {
-      eq: (a, b) => a === b,
-      add: (a, b) => a + b,
-      split: (text, delimiter) => text ? text.split(delimiter) : [],
-      formatDate: (date) => new Date(date).toLocaleDateString('vi-VN')
-    },
-    layoutsDir: path.join(__dirname, 'resources', 'views', 'users', 'layouts'),
-    partialsDir: path.join(__dirname, 'resources', 'views', 'users', 'partials'),
-    runtimeOptions: {
-      allowProtoPropertiesByDefault: true,  // Cho phép truy cập vào thuộc tính prototype
-      allowProtoMethodsByDefault: true,     // Cho phép truy cập vào phương thức prototype
-    },
-}
-));
+app.engine('hbs', engine({
+  extname: '.hbs',
+  helpers: {
+    eq: (a, b) => a === b,
+    add: (a, b) => a + b,
+    split: (text, delimiter) => text ? text.split(delimiter) : [],
+    formatDate: (date) => new Date(date).toLocaleDateString('vi-VN'),
+    lt: function(a, b, options) { // Đảm bảo helper lt được đăng ký đúng ở đây
+      if (a < b) {
+        return options.fn(this);
+      }
+      return options.inverse ? options.inverse(this) : '';
+    }
+  },
+  layoutsDir: path.join(__dirname, 'resources', 'views', 'users', 'layouts'),
+  partialsDir: path.join(__dirname, 'resources', 'views', 'users', 'partials'),
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,  // Cho phép truy cập vào thuộc tính prototype
+    allowProtoMethodsByDefault: true,     // Cho phép truy cập vào phương thức prototype
+  },
+}));
+
 app.set('view engine', 'hbs');
-//quan ly duong dan, dung tu thu muc
+// Quản lý đường dẫn, sử dụng từ thư mục
 app.set('views', path.join(__dirname, 'resources', 'views'));
+
 // Middleware để tắt layout cho tất cả các route dưới /admin
 app.use('/admin', (req, res, next) => {
   res.locals.layout = false;  // Tắt layout cho tất cả các route dưới /admin
@@ -71,15 +78,9 @@ app.use('/admin', (req, res, next) => {
 });
 
 // Route
-
 route(app);
-
-
 
 // Start server
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
-
-
