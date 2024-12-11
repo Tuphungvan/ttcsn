@@ -178,8 +178,9 @@
                             </a>
                             <div class="tour-price">{{this.price}} VND</div>
                             <div class="add-to-cart">
-                                <a href="/checkout/{{this.slug}}" class="btn">Add to Cart</a>
-                            </div>
+    <button class="btn add-to-cart-btn" data-slug="{{this.slug}}">Add to Cart</button>
+</div>
+
                         </div>
                     </div>
                 </div>
@@ -210,4 +211,37 @@
             400: { slidesPerView: 1 },
         },
     });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Lấy tất cả các nút Add to Cart
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+    // Gắn sự kiện click cho từng nút
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const slug = button.getAttribute('data-slug');
+
+            try {
+                // Gửi yêu cầu Ajax đến server
+                const response = await fetch(`/add-to-cart/${slug}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message); // Thông báo thành công
+                } else {
+                    alert(result.message); // Thông báo lỗi
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Đã xảy ra lỗi, vui lòng thử lại.');
+            }
+        });
+    });
+});
+
 </script>

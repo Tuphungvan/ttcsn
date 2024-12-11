@@ -2,9 +2,18 @@ const Tour = require('../models/Tour');
 
 class SiteController {
 
-    // get trang chủ
-    index(req, res) {
-        res.render('users/home');
+    // get trang chủ - hiển thị các tour ngẫu nhiên
+    async index(req, res) {
+        try {
+            // Lấy 6 tour ngẫu nhiên từ cơ sở dữ liệu
+            const randomTours = await Tour.aggregate([{ $sample: { size: 6 } }]);
+
+            // Render trang chủ và truyền danh sách tour ngẫu nhiên vào view
+            res.render('users/home', { tours: randomTours });
+        } catch (err) {
+            console.error('Error:', err);
+            res.status(500).json({ message: "Đã xảy ra lỗi trong quá trình tải trang chủ", error: err.message });
+        }
     }
 
     // get kết quả tìm kiếm

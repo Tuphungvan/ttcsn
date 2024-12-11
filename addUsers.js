@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { faker } = require('@faker-js/faker');
+const bcrypt = require('bcrypt');
 const User = require('./src/app/models/User'); // Import model User
 const { connect } = require('./src/config/db'); // Import hàm kết nối DB
 
@@ -57,17 +58,23 @@ const phoneNumbers = [
     '0990129234', '0901234575', '0912345687', '0923456878', '0934568789', '0945679890', '0956789901', '0967891012',
     '0978909123', '0989019234', '0990129345', '0901234576', '0912345688', '0923456889', '0934568890', '0945679901'
 ];
+// Hàm mã hóa mật khẩu
+const hashPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10); // Tạo salt với độ phức tạp 10
+    return bcrypt.hash(password, salt); // Mã hóa mật khẩu
+};
 // Hàm tạo một user giả lập
-const generateUser = (isForeign = false) => {
+const generateUser = async (isForeign = false) => {
     const nameList = isForeign ? foreignNames : vietnameseNames;
     const phone = phoneNumbers.pop(); // Lấy số điện thoại duy nhất từ danh sách
+    const hashedPassword = await hashPassword('123456');
     return {
         username: nameList[Math.floor(Math.random() * nameList.length)], // Chọn tên ngẫu nhiên
         email: faker.internet.email(), // Email vẫn giữ nguyên
-        password: '123456', // Mật khẩu mặc định
+        password: hashedPassword, // Mật khẩu mặc định
         phoneNumber: phone, // Sử dụng số điện thoại trong danh sách
         address: vietnamCities[Math.floor(Math.random() * vietnamCities.length)] + ', Việt Nam', // Địa chỉ tại Việt Nam
-        admin: faker.datatype.boolean(), // Ngẫu nhiên admin hoặc không
+        admin: false, 
         active: true // Mặc định là active
     };
 };
@@ -75,39 +82,58 @@ const generateUser = (isForeign = false) => {
 // Hàm thêm dữ liệu vào MongoDB
 const addUsers = async () => {
     try {
+        const batchSize = 10; // Số lượng user thêm vào mỗi lần
         const users = [];
         const usedVietnameseNames = new Set();
         const usedForeignNames = new Set();
-        const usedPhoneNumbers = new Set(); 
+        const usedPhoneNumbers = new Set();
+
+        // Hàm thêm user theo nhóm
+        const addBatch = async (batch) => {
+            for (const user of batch) {
+                await User.create(user);
+            }
+        };
+
         // Thêm 20 người nước ngoài
         for (let i = 0; i < 20; i++) {
             let newUser;
             do {
-                newUser = generateUser(true); // Tạo một user nước ngoài
-            } while (usedForeignNames.has(newUser.username) || await User.exists({ username: newUser.username })); // Kiểm tra xem username đã tồn tại chưa
-            usedPhoneNumbers.add(newUser.phoneNumber);
+                newUser = await generateUser(true); // Tạo một user nước ngoài
+            } while (usedForeignNames.has(newUser.username) || await User.exists({ username: newUser.username }));
             usedForeignNames.add(newUser.username);
             users.push(newUser);
+
+            if (users.length >= batchSize) {
+                await addBatch(users.splice(0, batchSize));
+            }
         }
 
         // Thêm 80 người Việt Nam
         for (let i = 0; i < 80; i++) {
             let newUser;
             do {
-                newUser = generateUser(false); // Tạo một user Việt Nam
-            } while (usedVietnameseNames.has(newUser.username) || await User.exists({ username: newUser.username })); // Kiểm tra xem username đã tồn tại chưa
-            usedPhoneNumbers.add(newUser.phoneNumber);
+                newUser = await generateUser(false); // Tạo một user Việt Nam
+            } while (usedVietnameseNames.has(newUser.username) || await User.exists({ username: newUser.username }));
             usedVietnameseNames.add(newUser.username);
             users.push(newUser);
+
+            if (users.length >= batchSize) {
+                await addBatch(users.splice(0, batchSize));
+            }
         }
 
-        // Thêm tất cả users vào cơ sở dữ liệu
-        await User.insertMany(users);
-        console.log('Thêm dữ liệu thành công!');
+        // Thêm những user còn lại
+        if (users.length > 0) {
+            await addBatch(users);
+        }
+
+        console.log('Thêm user thành công!');
     } catch (error) {
-        console.error('Lỗi khi thêm dữ liệu:', error);
+        console.error('Lỗi:', error);
     }
 };
+
 
 // Thực thi hàm
 addUsers();

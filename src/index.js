@@ -51,7 +51,10 @@ app.engine('hbs', engine(
       eq: (a, b) => a === b,
       add: (a, b) => a + b,
       split: (text, delimiter) => text ? text.split(delimiter) : [],
-      formatDate: (date) => new Date(date).toLocaleDateString('vi-VN')
+      formatDate: (date) => new Date(date).toLocaleDateString('vi-VN'),
+     reduce: function (array, field) {
+        return array.reduce((total, item) => total + (item[field] || 0), 0);
+      }
     },
     layoutsDir: path.join(__dirname, 'resources', 'views', 'users', 'layouts'),
     partialsDir: path.join(__dirname, 'resources', 'views', 'users', 'partials'),
