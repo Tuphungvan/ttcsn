@@ -1,0 +1,214 @@
+<section class="checkout">
+    <h1 class="checkout-title">Checkout</h1>
+
+    <!-- Danh sách các tour đã chọn -->
+    <div class="checkout-items">
+        {{#each cart.items}}
+        <div class="checkout-item">
+            <img class="checkout-item-image" src="{{this.image}}" alt="{{this.name}}" />
+            <div class="checkout-item-info">
+                <h3 class="item-name">{{this.name}}</h3>
+                <p class="item-price">Price: {{this.price}} VND</p>
+            </div>
+        </div>
+        {{/each}}
+        <h3 class="total">Total Amount: {{total}} VND</h3>
+    </div>
+
+    <!-- Phương thức thanh toán -->
+    <div class="payment-method">
+        <h3>Payment Method</h3>
+        <input type="radio" id="momo" name="payment" value="MoMo" checked />
+        <label for="momo">Thanh toán qua ví MoMo (giả lập)</label>
+    </div>
+
+    <!-- Các nút xác nhận và đặt hàng -->
+    <div class="checkout-buttons">
+        <!-- Nút xác nhận thanh toán -->
+        <form action="/checkout/confirm" method="POST">
+            <button type="submit" class="confirm-payment-btn">Xác nhận thanh toán</button>
+        </form>
+
+        <!-- Nút chỉ đặt hàng -->
+        <form action="/checkout/place-order" method="POST">
+            <button type="submit" class="place-order-btn">Đặt hàng</button>
+        </form>
+    </div>
+</section>
+<script>
+    document.getElementById('confirmButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/checkout/confirm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+            alert('Thanh toán đã được xác nhận!'); // Bạn có thể bỏ alert này nếu không cần
+        } else {
+            alert('Giỏ hàng trống hoặc có lỗi xảy ra.');
+        }
+    } catch (error) {
+        alert('Không thể xử lý thanh toán. Vui lòng thử lại.');
+        console.error('Error:', error);
+    }
+});
+
+</script>
+
+<style>
+.checkout {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Checkout items */
+.checkout-items {
+    margin-bottom: 30px;
+}
+
+.checkout-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-item img.checkout-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.checkout-item-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.item-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.item-price, .item-quantity {
+    font-size: 1rem;
+    color: #666;
+}
+
+.total {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #444;
+    text-align: right;
+    margin-top: 20px;
+}
+
+/* Payment method section */
+.payment-method {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payment-method h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.payment-method input[type="radio"] {
+    margin-right: 10px;
+}
+
+.payment-method label {
+    font-size: 1rem;
+    color: #444;
+}
+
+/* Checkout buttons */
+.checkout-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.checkout-buttons form {
+    width: 48%;
+}
+
+.confirm-payment-btn, .place-order-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.confirm-payment-btn {
+    background-color: #4CAF50; /* Xác nhận thanh toán */
+}
+
+.place-order-btn {
+    background-color: #2196F3; /* Đặt hàng */
+}
+
+.confirm-payment-btn:hover {
+    background-color: #45a049;
+}
+
+.place-order-btn:hover {
+    background-color: #1976D2;
+}
+
+@media (max-width: 768px) {
+    .checkout {
+        width: 95%;
+    }
+
+    .checkout-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .checkout-item img {
+        margin-bottom: 10px;
+    }
+
+    .total {
+        text-align: left;
+    }
+
+    .checkout-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+</style>

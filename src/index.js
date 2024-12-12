@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 const { engine } = require('express-handlebars'); // Sử dụng cú pháp require
 const session = require('express-session');
 const { faker } = require('@faker-js/faker');
-
 const app = express();
 const port = 3000;
 
@@ -54,6 +53,13 @@ app.engine('hbs', engine(
       formatDate: (date) => new Date(date).toLocaleDateString('vi-VN'),
      reduce: function (array, field) {
         return array.reduce((total, item) => total + (item[field] || 0), 0);
+      },
+      ifEquals: function (a, b, options) {  // Helper so sánh hai giá trị
+        if (a === b) {
+          return options.fn(this);  // Nếu bằng nhau, trả về nội dung block
+        } else {
+          return options.inverse(this);  // Nếu không, trả về nội dung ngược lại
+        }
       }
     },
     layoutsDir: path.join(__dirname, 'resources', 'views', 'users', 'layouts'),

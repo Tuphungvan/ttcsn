@@ -15,7 +15,7 @@
         </div>
         <div class="cart-summary">
             <h3 class="total">Total Price: {{total}} VND</h3>
-            <form action="/checkout" method="POST">
+            <form action="/checkout" method="GET">
                 <button type="submit" class="checkout-btn">Book now</button>
             </form>
         </div>
@@ -166,6 +166,4 @@ main.cart-container {
         }
     });
 });
-
-
 </script>

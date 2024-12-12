@@ -1,0 +1,105 @@
+<h1>Danh sách đơn hàng của tôi</h1>
+
+{{#if orders.length}}
+    <ul>
+        {{#each orders}}
+            <li>
+                <p><strong>Đơn hàng ID:</strong> {{this._id}}</p>
+                <p><strong>Trạng thái:</strong> {{this.status}}</p>
+                <p><strong>Tổng tiền:</strong> {{this.totalAmount}} VND</p>
+                <p><strong>Ngày đặt:</strong> {{this.createdAt}}</p>
+                {{#ifEquals this.status "Chờ thanh toán"}}
+                    <form action="/checkout/confirm-payment/{{this._id}}" method="POST">
+        <button type="submit" class="btn confirm-btn">Xác nhận thanh toán</button>
+    </form>
+                {{else}}
+                    <span class="btn confirmed-btn">Đã thanh toán</span>
+                {{/ifEquals}}
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p class="empty-message">Chưa có đơn hàng nào.</p>
+{{/if}}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        color: #444;
+        margin-bottom: 20px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    li:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+        transition: all 0.2s ease;
+    }
+
+    p {
+        margin: 5px 0;
+        line-height: 1.6;
+    }
+
+    p strong {
+        color: #555;
+    }
+
+    .empty-message {
+        text-align: center;
+        color: #777;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 10px;
+        text-align: center;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .confirm-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+    }
+
+    .confirm-btn:hover {
+        background-color: #45a049;
+    }
+
+    .confirmed-btn {
+        background-color: #2196F3;
+        color: white;
+    }
+
+    .confirmed-btn:hover {
+        background-color: #1976D2;
+    }
+</style>
