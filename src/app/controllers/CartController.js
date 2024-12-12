@@ -77,8 +77,18 @@ class CartController {
             res.status(500).json({ message: "Đã xảy ra lỗi khi xóa tour khỏi giỏ hàng", error: err.message });
         }
     }
+    //lay so luong tour
+    async cartItemCount(req, res) {
+        try {
+            const cart = await Cart.findOne({ userId: req.session.user.id });
+            const totalCount = cart ? cart.items.length : 0;
 
-
+            res.json({ success: true, count: totalCount });
+        } catch (err) {
+            console.error('Error:', err);
+            res.status(500).json({ success: false, message: "Đã xảy ra lỗi khi lấy số lượng giỏ hàng", error: err.message });
+        }
+    }
 }
 
 module.exports = new CartController();

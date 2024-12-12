@@ -12,4 +12,6 @@ router.get('/cart', isAuthenticated, CartController.viewCart);
 // Xóa tour khỏi giỏ hàng
 router.delete('/cart/remove/:slug', isAuthenticated, CartController.removeFromCart);
 
+router.get('/count', isAuthenticated, CartController.cartItemCount);
+
 module.exports = router;
