@@ -1,6 +1,6 @@
 const Cart = require('../models/Cart');
 const Order = require('../models/Order'); // Import model Order
-
+const Wallet = require('../models/Wallet');
 class CheckoutController {
     // [GET] /checkout
     async index(req, res) {
@@ -50,17 +50,12 @@ class CheckoutController {
             // Tính tổng tiền
             const totalAmount = cart.items.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
 
-            // Xác định trạng thái đơn hàng dựa trên trạng thái thanh toán
-            const orderStatus = req.session.paymentStatus === 'Đã thanh toán và chờ xác nhận'
-                ? 'Đã thanh toán và chờ xác nhận'
-                : 'Chờ thanh toán';
-
             const newOrder = new Order({
                 userId,
                 items: cart.items,
                 totalAmount,
-                status: orderStatus, // Trạng thái có thể là "Chờ thanh toán" hoặc "Đã thanh toán và chờ xác nhận"
-                paymentMethod: 'Giả lập', // Có thể là ví điện tử hoặc thanh toán qua các phương thức khác
+                status: 'Chờ thanh toán', 
+                paymentMethod: 'My wallet', 
             });
 
             // Lưu đơn hàng
@@ -69,8 +64,8 @@ class CheckoutController {
             // Xóa giỏ hàng sau khi tạo đơn hàng
             await Cart.deleteOne({ userId });
 
-            // Hiển thị thông báo đặt hàng thành công
-            res.render('users/checkout-success', { message: 'Đặt hàng thành công! Bạn có thể xem đơn hàng của mình trong My Orders.' });
+            // Chuyển hướng người dùng tới trang thanh toán
+            res.redirect(`/checkout/payment/${newOrder._id}`);
 
         } catch (error) {
             console.error(error);
@@ -78,38 +73,59 @@ class CheckoutController {
         }
     }
 
-    // [GET] /my-orders
-    async myOrders(req, res) {
+    async confirmPayment(req, res) {
         try {
-            const userId = req.session.user.id;
-            const orders = await Order.find({ userId });
+            const orderId = req.params.id;  // Lấy ID đơn hàng từ URL
+            const order = await Order.findById(orderId);  // Tìm đơn hàng trong cơ sở dữ liệu
 
-            res.render('users/my-orders', { orders });
+            if (!order || order.status !== 'Chờ thanh toán') {
+                return res.status(400).json({ message: 'Đơn hàng không hợp lệ hoặc đã thanh toán' });
+            }
+
+            // Kiểm tra số dư trong ví
+            const userId = req.session.user.id;
+            const wallet = await Wallet.findOne({ userId });
+
+            if (!wallet || wallet.balance < order.totalAmount) {
+                // Nếu số dư không đủ, không thay đổi trạng thái đơn hàng
+                return res.status(400).json({ message: 'Số dư trong ví không đủ để thanh toán' });
+            }
+
+            // Trừ số tiền thanh toán từ ví
+            wallet.balance -= order.totalAmount;
+            await wallet.save();
+
+            // Cập nhật trạng thái đơn hàng
+            order.status = 'Đã thanh toán và chờ xác nhận';  // Cập nhật trạng thái
+            await order.save();  // Lưu thay đổi đơn hàng
+
+            // Trả về thông báo thành công
+            return res.status(200).json({ message: 'Xác nhận thanh toán thành công!' });
         } catch (error) {
             console.error(error);
-            res.redirect('/');
+            return res.status(500).json({ message: 'Có lỗi xảy ra. Vui lòng thử lại.' });
         }
     }
+    async showPaymentPage(req, res) {
+        try {
+            const orderId = req.params.id;  // Lấy orderId từ URL
+            const order = await Order.findById(orderId).populate('items');  // Lấy thông tin đơn hàng từ database
 
-async confirmPayment(req, res) {
-    try {
-        const orderId = req.params.id;  // Lấy ID đơn hàng từ URL
-        const order = await Order.findById(orderId);
+            if (!order) {
+                return res.status(404).send('Đơn hàng không tồn tại');
+            }
 
-        if (!order || order.status !== 'Chờ thanh toán') {
-            return res.status(400).json({ message: 'Đơn hàng không hợp lệ hoặc đã thanh toán' });
+            // Lấy ví của người dùng để kiểm tra số dư
+            const userId = req.session.user.id;
+            const wallet = await Wallet.findOne({ userId });
+
+            // Render trang thanh toán với thông tin đơn hàng và ví
+            res.render('users/payment', { order, wallet });  // Giả sử bạn có view 'payment'
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Lỗi hệ thống');
         }
-
-        order.status = 'Đã thanh toán và chờ xác nhận';  // Cập nhật trạng thái đơn hàng
-        await order.save();  // Lưu lại thay đổi
-
-        return res.status(200).json({ message: 'Xác nhận thanh toán thành công!' });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Có lỗi xảy ra. Vui lòng thử lại.' });
     }
-}
-
 
 }
 

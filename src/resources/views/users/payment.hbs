@@ -1,0 +1,30 @@
+<!-- payment.hbs -->
+<h1 style="margin-top: 120px;">Thanh toán đơn hàng #{{order._id}}</h1>
+
+<h3>Danh sách các sản phẩm:</h3>
+<ul>
+    {{#each order.items}}
+        <li>{{this.name}} x{{this.quantity}} - {{this.price}} VND</li>
+    {{/each}}
+</ul>
+
+<p><strong>Tổng tiền:</strong> {{order.totalAmount}} VND</p>
+
+<h3>Thông tin ví:</h3>
+<p><strong>Số dư hiện tại:</strong> {{wallet.balance}} VND</p>
+
+<!-- Form xác nhận thanh toán -->
+{{#compare wallet.balance order.totalAmount}}
+  <!-- Nếu điều kiện đúng, hiển thị form này -->
+  <form action="/checkout/confirm-payment/{{order._id}}" method="POST">
+    <button type="submit" class="confirm-payment-btn">Xác nhận thanh toán</button>
+  </form>
+{{else}}
+  <!-- Nếu điều kiện sai, hiển thị thông báo lỗi -->
+  <p>Số dư không đủ để thanh toán. Vui lòng nạp thêm tiền vào ví.</p>
+  <!-- Form bỏ qua luôn hiển thị -->
+  <form action="/profile/my-orders" method="GET">
+    <button type="submit" class="skip-payment-btn">Bỏ qua thanh toán</button>
+  </form>
+{{/compare}}
+

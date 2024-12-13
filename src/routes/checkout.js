@@ -9,8 +9,9 @@ router.get('/', isAuthenticated, checkoutController.index);
 router.post('/confirm', isAuthenticated, checkoutController.confirm);
 // Route chỉ đặt hàng
 router.post('/place-order', isAuthenticated, checkoutController.placeOrder);
-router.get('/my-orders', isAuthenticated, checkoutController.myOrders);
 // Xác nhận thanh toán cho đơn hàng
 router.post('/confirm-payment/:id', isAuthenticated, checkoutController.confirmPayment);
+// Route hiển thị trang thanh toán với thông tin đơn hàng
+router.get('/payment/:id', isAuthenticated, checkoutController.showPaymentPage);
 
 module.exports = router;

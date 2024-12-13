@@ -60,6 +60,13 @@ app.engine('hbs', engine(
         } else {
           return options.inverse(this);  // Nếu không, trả về nội dung ngược lại
         }
+      },
+      compare: function (value1, value2, options) {  // Helper so sánh giá trị
+        if (value1 >= value2) {
+          return options.fn(this);  // Nếu điều kiện đúng, trả về nội dung block
+        } else {
+          return options.inverse(this);  // Nếu điều kiện sai, trả về nội dung block ngược lại
+        }
       }
     },
     layoutsDir: path.join(__dirname, 'resources', 'views', 'users', 'layouts'),

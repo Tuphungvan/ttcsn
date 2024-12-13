@@ -1,0 +1,15 @@
+<h1 style="margin-top: 200px;">Lịch sử đơn hàng</h1>
+
+{{#if histories.length}}
+<ul>
+    {{#each histories}}
+    <li>
+        <p><strong>ID:</strong> {{this.orderId._id}}</p>
+        <p><strong>Ngày kết thúc:</strong> {{this.endDate}}</p>
+        <p><strong>Hoàn thành vào:</strong> {{this.completedAt}}</p>
+    </li>
+    {{/each}}
+</ul>
+{{else}}
+<p>Chưa có lịch sử đơn hàng.</p>
+{{/if}}
