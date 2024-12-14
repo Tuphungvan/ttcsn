@@ -50,9 +50,15 @@ class CartController {
         try {
             // Lấy giỏ hàng từ cơ sở dữ liệu
             const cart = await Cart.findOne({ userId: req.session.user.id }).populate('items.slug');
+            // Kiểm tra nếu cart hoặc cart.items không tồn tại
+            if (!cart || !cart.items) {
+                return res.render('users/cart', { cart: { items: [] }, total: 0 });
+            }
             // Tính tổng tiền giỏ hàng
-            const total = cart.items.reduce((sum, item) => sum + item.price, 0);
-            res.render('users/cart', { cart: cart || { items: [] }, total });
+            const total = cart.items.reduce((sum, item) => sum + (item.price || 0), 0);
+
+            // Render giỏ hàng
+            res.render('users/cart', { cart, total });
         } catch (err) {
             console.error('Error:', err);
             res.status(500).json({ message: "Đã xảy ra lỗi khi hiển thị giỏ hàng", error: err.message });

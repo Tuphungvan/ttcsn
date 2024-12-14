@@ -1,5 +1,5 @@
 <style>
-body {
+main {
     background-color: #f9f9f9;
     color: #333;
     text-align: center;
@@ -14,20 +14,22 @@ h1 {
     color: #444;
 }
 
-/* Profile actions section */
 .profile-actions {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);  
     gap: 20px;
     margin-bottom: 40px;
+    justify-items: center; 
+    grid-template-columns: repeat(2, 200px); 
+    justify-content: center;
+    margin: 0 auto; 
 }
 
 .action {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 150px;
+    width: 180px;  
     padding: 15px;
     text-align: center;
     transition: transform 0.3s ease;
@@ -49,25 +51,43 @@ h1 {
     color: #444;
 }
 
-/* Logout button */
 .logout-button {
-    padding: 10px 20px;
+    padding: 15px 30px;  
     background: #dc3545;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s ease;
+    margin-top: 30px;
+    grid-column: span 2;  
+    font-size: 1.2rem;  
+    display: block; 
+    margin-left: auto;  
+    margin-right: auto;
+    margin-bottom: 80px;  
 }
 
 .logout-button:hover {
     background: #c82333;
 }
 
-    </style>
-<body>
+@media (max-width: 768px) {
+    .profile-actions {
+        grid-template-columns: 1fr; 
+        gap: 10px; 
+    }
+
+    .logout-button {
+        font-size: 1.1rem;
+        padding: 12px 25px; 
+    }
+}
+
+</style>
+      
+ <main>
         <h1>User Profile</h1>
-    <main>
         <section class="profile-actions">
             <div class="action">
                 <a href="profile/my-orders">
@@ -95,5 +115,4 @@ h1 {
             </div>
         <button class="logout-button" onclick="window.location.href='/v1/auth/logout'">Logout</button>
     </main>
-</body>
 

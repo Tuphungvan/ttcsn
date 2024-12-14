@@ -1,15 +1,94 @@
-<h1 style="margin-top: 200px;">Lịch sử đơn hàng</h1>
+<section class="order-history">
+    <h1>Lịch sử đơn hàng</h1>
 
-{{#if histories.length}}
-<ul>
-    {{#each histories}}
-    <li>
-        <p><strong>ID:</strong> {{this.orderId._id}}</p>
-        <p><strong>Ngày kết thúc:</strong> {{this.endDate}}</p>
-        <p><strong>Hoàn thành vào:</strong> {{this.completedAt}}</p>
-    </li>
-    {{/each}}
-</ul>
-{{else}}
-<p>Chưa có lịch sử đơn hàng.</p>
-{{/if}}
+    {{#if histories.length}}
+        <ul>
+            {{#each histories}}
+                <li>
+                    <p><strong>ID:</strong> {{this.orderId}}</p>
+                    <p><strong>Ngày kết thúc:</strong> {{this.endDate}}</p>
+                    <p><strong>Hoàn thành vào:</strong> {{this.completedAt}}</p>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>Chưa có lịch sử đơn hàng.</p>
+    {{/if}}
+</section>
+<style>
+section.order-history{
+    margin-top: 150px;
+    margin-bottom: 100px;
+}
+/* Thẻ section chứa nội dung */
+.order-history {
+    width: 100%;
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề */
+.order-history h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Định dạng danh sách */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Hiệu ứng hover cho mỗi item trong danh sách */
+li:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+/* Định dạng các đoạn văn bản trong danh sách */
+p {
+    margin: 5px 0;
+    line-height: 1.6;
+}
+
+p strong {
+    color: #555;
+}
+
+/* Thông báo nếu không có lịch sử */
+.order-history p {
+    text-align: center;
+    color: #777;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .order-history {
+        padding: 20px;
+    }
+
+    .order-history h1 {
+        font-size: 1.6rem;
+    }
+}
+
+</style>
